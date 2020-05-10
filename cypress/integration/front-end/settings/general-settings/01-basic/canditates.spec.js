@@ -1,4 +1,5 @@
 import {createRandomString} from '../../../../../support/utils/utils';
+import {createRandomStringOnlyLetters} from '../../../../../support/utils/utils';
 import candidatesPage from '../../../../../support/pages/candidates';
 import loginPage from '../../../../../support/pages/login';
 
@@ -16,10 +17,10 @@ let experience;
 //Test for the candidates page.
 describe('Candidates page tests', () => {
   beforeEach(() => {
-    name = createRandomString(6);
-    email = 'test@test.com';
+    name = createRandomStringOnlyLetters(6);
+    email = 'test@test76.com';
     firstContactDate = '01-04-2020';
-    lastContactDate = '01-04-2020';
+    lastContactDate = '01-05-2020';
     experience = '4';
 
     loginPage.login(loginPage.testUsername);

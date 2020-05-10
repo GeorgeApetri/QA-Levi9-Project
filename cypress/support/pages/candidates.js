@@ -39,7 +39,9 @@ class Candidates {
   };
 
   checkCreateCandidatesButton = () => {
-    cy.get(this.createCandidateButton).should('be.visible').click();
+    cy.get(this.createCandidateButton)
+      .should('be.visible')
+      .click();
     cy.get(this.createCandidateModal).should('be.visible');
   };
 
@@ -51,13 +53,17 @@ class Candidates {
   };
 
   checkAdvancedSearchButton = () => {
-    cy.contains(this.advancedSearchButton).should('be.visible').click();
+    cy.contains(this.advancedSearchButton)
+      .should('be.visible')
+      .click();
     cy.contains('Name').should('be.visible');
   };
 
   selectSeniority = () => {
-    cy.contains('Select Seniority').click();
-    cy.contains('Junior').click();
+    cy.get('#seniorityId').click();
+    cy.get('.qa-seniorityIdSelectValue')
+      .contains('Senior')
+      .click();
   };
 
   selectRecruiter = () => {
@@ -85,13 +91,15 @@ class Candidates {
     //Select seniority
     this.selectSeniority();
     //Type email
-    cy.contains('#Email').type(email);
+    cy.get('#email').type(email);
     //Select recuiter
     this.selectRecruiter();
     //Select first contact date
-    cy.contains('#firstContactDate').type(firstContactDate);
+    cy.get('#firstContactDate').click();
+    cy.get('[title="May 1, 2020"]').click();
     //Select last contact date
-    cy.contains('#lastContactDate').type(lastContactDate);
+    cy.get('#lastContactDate').click();
+    cy.get('[title="May 4, 2020"]').click();
     //Select CV source
     this.selectCvSource();
     //Select contact status
@@ -122,7 +130,9 @@ class Candidates {
   };
 
   checkCandidateWithEmptyfieldsErrorMessage = () => {
-    cy.contains(this.nameWasNotAddedErrorMessage).scrollIntoView().should('be.visible');
+    cy.contains(this.nameWasNotAddedErrorMessage)
+      .scrollIntoView()
+      .should('be.visible');
     cy.contains(this.seniorityNotSelectedErrorMessage).should('be.visible');
     cy.contains(this.emailNotAddedErrorMessage).should('be.visible');
     cy.contains(this.recruiterNotSelectedErrorMessage).should('be.visible');
