@@ -1,0 +1,7 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+node_modules
+
+# environment variables
+*.env.json
+ No newline at end of file

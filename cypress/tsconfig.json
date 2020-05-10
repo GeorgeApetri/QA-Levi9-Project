@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "outDir": "./cypress/integration",
+    "baseUrl": "../node_modules",
+    "types": ["cypress"]
+  },
+  "include": ["**/*.*"]
+}
