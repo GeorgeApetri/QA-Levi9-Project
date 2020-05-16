@@ -1,0 +1,74 @@
+{
+	"id": "bb86fe04-c431-4faf-8a65-df9263196b2f",
+	"name": "RS9",
+	"values": [
+		{
+			"key": "baseURL",
+			"value": "http://52.233.158.155:8080/api/v1",
+			"enabled": true
+		},
+		{
+			"key": "projectName",
+			"value": "qh1INvQKvc",
+			"enabled": true
+		},
+		{
+			"key": "projectAbbreviation",
+			"value": "Dh7",
+			"enabled": true
+		},
+		{
+			"key": "projectID",
+			"value": "e62c0445-f52b-49d5-b922-994071534d97",
+			"enabled": true
+		},
+		{
+			"key": "projectNameNew",
+			"value": "AiqbsTjPHR",
+			"enabled": true
+		},
+		{
+			"key": "projectAbbreviationNew",
+			"value": "szF",
+			"enabled": true
+		},
+		{
+			"key": "candidateID",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "candidateName",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "candidateEmail",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "candidatePhone",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "candidateNameNew",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "candidateEmailNew",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "candidatePhoneNew",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2020-05-16T21:06:25.219Z",
+	"_postman_exported_using": "Postman/7.24.0"
+}

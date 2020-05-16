@@ -1,38 +1,59 @@
 import {createRandomString} from '../../../../../support/utils/utils';
 import {createRandomStringOnlyLetters} from '../../../../../support/utils/utils';
+import {createRandomStringOnlyNumbers} from '../../../../../support/utils/utils';
 import candidatesPage from '../../../../../support/pages/candidates';
 import loginPage from '../../../../../support/pages/login';
 
 let name;
-let seniority;
 let email;
-let recruiter;
-let firstContactDate;
-let lastContactDate;
-let cvSource;
-let contactStatus;
-let role;
+let phone;
+let city;
 let experience;
+
+let newName;
+let newEmail;
+let newPhone;
+let newCity;
+let newExperience;
 
 //Test for the candidates page.
 describe('Candidates page tests', () => {
-  beforeEach(() => {
-    name = createRandomStringOnlyLetters(6);
-    email = 'test@test76.com';
-    firstContactDate = '01-04-2020';
-    lastContactDate = '01-05-2020';
-    experience = '4';
-
-    loginPage.login(loginPage.testUsername);
-    candidatesPage.accesCandidates();
-  });
-
   describe('Create tests.', () => {
-    it.only('Check that new candidates can be added', () => {
-      candidatesPage.addCandidate(name, email, firstContactDate, lastContactDate, experience);
-      //candidatesPage.checkCandidateIsAdded();
+    beforeEach(() => {
+      name = createRandomStringOnlyLetters(6) + 'GG';
+      email = createRandomString(4) + '@' + createRandomString(3) + '.com';
+      phone = '07' + createRandomStringOnlyNumbers(8);
+      city = 'Iasi';
+      experience = createRandomStringOnlyNumbers(1);
+
+      loginPage.login(loginPage.testUsername);
+      candidatesPage.accesCandidates();
+    });
+    afterEach(() => {
+      //candidatesPage.deleteCandidate(name);
     });
 
+    it.only('Check that new candidates can be added', () => {
+      candidatesPage.addCandidate(name, email, phone, city, experience);
+      candidatesPage.checkCandidateIsAdded(name);
+    });
+
+    it('Check that candidates can be updated', () => {
+      newName = createRandomStringOnlyLetters(7) + 'GE';
+      newEmail = createRandomString(4) + '@' + createRandomString(3) + '.ro';
+      newPhone = '07' + createRandomStringOnlyNumbers(8);
+      newCity = 'Oradea';
+      newExperience = createRandomStringOnlyNumbers(1);
+
+      candidatesPage.captureGetCandidatesRequest();
+      candidatesPage.addCandidate(name, email, phone, city, experience);
+      candidatesPage.waitGetCandidatesRequest();
+      candidatesPage.editCandidate(newName, newEmail, newPhone, newCity, newExperience);
+      candidatesPage.checkCandidateIsAdded(newName);
+    });
+  });
+
+  describe('Check tests.', () => {
     it('Check the Create Candidate button is visible and open the form', () => {
       candidatesPage.checkCreateCandidatesButton();
     });

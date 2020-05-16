@@ -5,6 +5,9 @@ import {chooseRandomFromDropdown} from '../utils/utils';
 class Candidates {
   //Locators
   createCandidateButton = qa('createCandidateBtn');
+  deleteCandidateButton = qa('deleteRow');
+  editCandidateButton = qa('editRow');
+  viewRow = qa('viewRow');
   saveCandidateButton = 'Save candidate';
   cancelCreateCandidateButton = 'Cancel';
   advancedSearchButton = 'Advanced Search';
@@ -12,13 +15,17 @@ class Candidates {
   candidateNameInput = '#name';
   candidateSeniorityInput = 'Select Seniority';
   candidateEmailInput = '#email';
-  candidateFirstContactDate = 'First contact date';
-  candidateLastContactDate = 'Last contact date';
+  candidatePhoneInput = '#phone';
+  candidateCityInput = '#city';
+  candidateFirstContactDate = '#firstContactDate';
+  candidateLastContactDate = '#lastContactDate';
   candidateRecruiter = 'Select recruiter';
   candidateCvSource = 'Select CV source';
   candidateContactStatus = 'Select Contact status';
   candidateRole = 'Select Role';
-  candidateExperience = 'Experience (y)';
+  candidateExperienceInput = '#experience';
+  confirmDeleteCandidateButton = 'Yes, delete candidate';
+  confirmUpdateCandidateButton = 'Yes, update candidate';
 
   //Text utils
   candidatesPath = '/candidates';
@@ -33,15 +40,17 @@ class Candidates {
   roleNotSelectedErrorMessage = 'Role is required.';
   experienceWasNotAddedErrorMessage = 'Experience is required.';
 
+  getCandidatesRequestObject = {
+    method: 'GET',
+    url: '**/api/v1/Candidates',
+  };
   //Methods
   accesCandidates = () => {
     cy.visit(this.candidatesPath);
   };
 
   checkCreateCandidatesButton = () => {
-    cy.get(this.createCandidateButton)
-      .should('be.visible')
-      .click();
+    cy.get(this.createCandidateButton).should('be.visible').click();
     cy.get(this.createCandidateModal).should('be.visible');
   };
 
@@ -53,17 +62,13 @@ class Candidates {
   };
 
   checkAdvancedSearchButton = () => {
-    cy.contains(this.advancedSearchButton)
-      .should('be.visible')
-      .click();
+    cy.contains(this.advancedSearchButton).should('be.visible').click();
     cy.contains('Name').should('be.visible');
   };
 
   selectSeniority = () => {
     cy.get('#seniorityId').click();
-    cy.get('.qa-seniorityIdSelectValue')
-      .contains('Senior')
-      .click();
+    cy.get('.qa-seniorityIdSelectValue').contains('Senior').click();
   };
 
   selectRecruiter = () => {
@@ -82,24 +87,28 @@ class Candidates {
   };
 
   selectRole = () => {
-    cy.contains('Select Role').click();
-    cy.contains('1').click();
+    cy.get('#roleId').click();
+    cy.get('.qa-roleIdSelectValue').contains('1').click();
   };
-  completeCreateCandidateData = (name, email, firstContactDate, lastContactDate, experience) => {
+  completeCreateCandidateData = (name, email, phone, city, experience) => {
     //Type a candidate name
     cy.get(this.candidateNameInput).type(name);
     //Select seniority
     this.selectSeniority();
     //Type email
-    cy.get('#email').type(email);
+    cy.get(this.candidateEmailInput).type(email);
+    //Type phone
+    cy.get(this.candidatePhoneInput).type(phone);
+    //Type city
+    cy.get(this.candidateCityInput).type(city);
+    //Select first contact date
+    cy.get(this.candidateFirstContactDate).click();
+    cy.get('[title="May 1, 2020"]').click();
     //Select recuiter
     this.selectRecruiter();
-    //Select first contact date
-    cy.get('#firstContactDate').click();
-    cy.get('[title="May 1, 2020"]').click();
     //Select last contact date
-    cy.get('#lastContactDate').click();
-    cy.get('[title="May 4, 2020"]').click();
+    cy.get(this.candidateLastContactDate).click();
+    cy.get('[class="ant-calendar-today-btn "]').click();
     //Select CV source
     this.selectCvSource();
     //Select contact status
@@ -107,16 +116,33 @@ class Candidates {
     //Select role
     this.selectRole();
     //Type experience
-    cy.contains('#experience').type(experience);
+    cy.get(this.candidateExperienceInput).type(experience);
   };
 
-  addCandidate = (name, email, firstContactDate, lastContactDate, experience) => {
+  addCandidate = (name, email, phone, city, experience) => {
     //Click Create Candidate button
     cy.get(this.createCandidateButton).click();
     //Enter data in form
-    this.completeCreateCandidateData(name, email, firstContactDate, lastContactDate, experience);
+    this.completeCreateCandidateData(name, email, phone, city, experience);
     //Click on the save button
-    cy.get(this.saveCandidateButton).click();
+    cy.contains(this.saveCandidateButton).click();
+  };
+
+  editCandidate = (newName, newEmail, newPhone, newCity, newExperience) => {
+    //Click Edit Candidate button
+    cy.get(this.editCandidateButton).click();
+    this.completeCreateCandidateData(newName, newEmail, newPhone, newCity, newExperience);
+    cy.contains(this.confirmUpdateCandidateButton).click();
+  };
+
+  deleteCandidate = (name) => {
+    cy.contains('tr', name).find(this.deleteCandidateButton).click({force: true});
+    cy.contains(this.confirmDeleteCandidateButton).click();
+    this.checkCandidateIsDeleted(name);
+  };
+
+  waitGetCandidatesRequest = () => {
+    cy.wait('@getCandidates');
   };
 
   addCandidateWithEmptyFields = () => {
@@ -129,10 +155,16 @@ class Candidates {
     cy.contains(this.saveCandidateButton).click();
   };
 
+  checkCandidateIsAdded = (name) => {
+    cy.contains(name).should('be.visible');
+  };
+
+  checkCandidateIsDeleted = (name) => {
+    cy.contains(name).should('not.be.visible');
+  };
+
   checkCandidateWithEmptyfieldsErrorMessage = () => {
-    cy.contains(this.nameWasNotAddedErrorMessage)
-      .scrollIntoView()
-      .should('be.visible');
+    cy.contains(this.nameWasNotAddedErrorMessage).scrollIntoView().should('be.visible');
     cy.contains(this.seniorityNotSelectedErrorMessage).should('be.visible');
     cy.contains(this.emailNotAddedErrorMessage).should('be.visible');
     cy.contains(this.recruiterNotSelectedErrorMessage).should('be.visible');
@@ -142,6 +174,11 @@ class Candidates {
     cy.contains(this.contactStatusNotSelectedErrorMessage).should('be.visible');
     cy.contains(this.roleNotSelectedErrorMessage).should('be.visible');
     cy.contains(this.experienceWasNotAddedErrorMessage).should('be.visible');
+  };
+
+  captureGetCandidatesRequest = () => {
+    cy.server();
+    cy.route(this.getCandidatesRequestObject).as('getCandidates');
   };
 }
 
