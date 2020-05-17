@@ -826,7 +826,8 @@
 									"    pm.expect(body.phone).to.eql(pm.environment.get(\"candidatePhone\"));\r",
 									"});\r",
 									"var data = JSON.parse(responseBody);\r",
-									"pm.environment.set(\"candidateID\", data.id);"
+									"pm.environment.set(\"candidateID\", data.id);\r",
+									"pm.environment.set(\"candidateHeadEmail\",data.email);"
 								],
 								"type": "text/javascript"
 							}
@@ -855,6 +856,39 @@
 							]
 						},
 						"description": "Creates a new candidate"
+					},
+					"response": []
+				},
+				{
+					"name": "Check email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "27d46ff3-fe6d-425b-a01d-f990b3629388",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "HEAD",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/Candidates/{{candidateHeadEmail}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"Candidates",
+								"{{candidateHeadEmail}}"
+							]
+						},
+						"description": "Checks if exists a candidate with a specific email"
 					},
 					"response": []
 				},

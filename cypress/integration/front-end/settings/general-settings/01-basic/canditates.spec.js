@@ -30,10 +30,10 @@ describe('Candidates page tests', () => {
       candidatesPage.accesCandidates();
     });
     afterEach(() => {
-      //candidatesPage.deleteCandidate(name);
+      candidatesPage.deleteCandidate(name);
     });
 
-    it.only('Check that new candidates can be added', () => {
+    it('Check that new candidates can be added', () => {
       candidatesPage.addCandidate(name, email, phone, city, experience);
       candidatesPage.checkCandidateIsAdded(name);
     });
@@ -45,15 +45,21 @@ describe('Candidates page tests', () => {
       newCity = 'Oradea';
       newExperience = createRandomStringOnlyNumbers(1);
 
-      candidatesPage.captureGetCandidatesRequest();
       candidatesPage.addCandidate(name, email, phone, city, experience);
+      candidatesPage.captureGetCandidatesRequest();
       candidatesPage.waitGetCandidatesRequest();
-      candidatesPage.editCandidate(newName, newEmail, newPhone, newCity, newExperience);
+      candidatesPage.editCandidate(name, newName, newEmail, newPhone, newCity, newExperience);
+      name = newName;
       candidatesPage.checkCandidateIsAdded(newName);
     });
   });
 
   describe('Check tests.', () => {
+    beforeEach(() => {
+      loginPage.login(loginPage.testUsername);
+      candidatesPage.accesCandidates();
+    });
+
     it('Check the Create Candidate button is visible and open the form', () => {
       candidatesPage.checkCreateCandidatesButton();
     });
@@ -69,6 +75,10 @@ describe('Candidates page tests', () => {
     it('Check that error message appear when candidate inputs are empty', () => {
       candidatesPage.addCandidateWithEmptyFields();
       candidatesPage.checkCandidateWithEmptyfieldsErrorMessage();
+    });
+
+    it('Check the incorrect email format error message', () => {
+      candidatesPage.checkIncorrectEmailMessage(createRandomString(6));
     });
   });
 });

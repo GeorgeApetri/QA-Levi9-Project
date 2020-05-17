@@ -38,7 +38,7 @@ describe('General settings page tests', () => {
       projectSettingsPage.checkAddProjectRequestIsSuccessful();
     });
 
-    it('Checks that a project can be edited with request validation and check the PUT request to be successful.', () => {
+    it.only('Checks that a project can be edited with request validation and check the PUT request to be successful.', () => {
       editedName = createRandomString(5);
       editedAbbreviation = createRandomString(3);
 

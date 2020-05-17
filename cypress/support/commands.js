@@ -23,3 +23,12 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('attach_file', {prevSubject: 'element'}, (subject, fileContents, contentType, fileName) => {
+  Cypress.Blob.base64StringToBlob(fileContents, contentType).then((blob) => {
+    const testFile = new File([blob], fileName, {type: contentType});
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(testFile);
+    cy.wrap(subject).trigger('drop', {dataTransfer});
+  });
+});
